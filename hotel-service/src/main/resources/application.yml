@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE}
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/
+    username:
+    password:
+  liquibase:
+    url: jdbc:postgresql://localhost:5432/
+    user:
+    password:
+    change-log: classpath:/db/changelog/db.changelog-master.yaml

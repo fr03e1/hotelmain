@@ -1,0 +1,61 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.9.24' apply false
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.9.24' apply false
+    id 'org.springframework.boot' version '3.3.2' apply false
+    id 'io.spring.dependency-management' version '1.1.6' apply false
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.jetbrains.kotlin.jvm'
+    apply plugin: 'org.jetbrains.kotlin.plugin.spring'
+    apply plugin: "kotlin-kapt"
+
+    group = 'com'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = '20'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(20)
+        }
+    }
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        implementation 'org.jetbrains.kotlin:kotlin-reflect'
+        implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
+        testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    }
+
+    kotlin {
+        compilerOptions {
+            freeCompilerArgs.addAll '-Xjsr305=strict'
+        }
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+        options.compilerArgs << '-parameters'
+    }
+
+    tasks.withType(Test) {
+        useJUnitPlatform()
+    }
+}
