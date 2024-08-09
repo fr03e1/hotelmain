@@ -8,6 +8,7 @@ import com.hotelmain.dto.validation.OnUpdate
 import com.hotelmain.exception.NotFoundException
 import com.hotelmain.service.HotelService
 import com.hotelmain.service.mapping.HotelMapper
+import com.hotelmain.util.ResponseUtil
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -30,12 +31,12 @@ class HotelController(
         return ResponseEntity.status(HttpStatus.OK).body(hotels)
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(EndpointConstant.ID_PATH)
     fun getHotel(@PathVariable id: Long): Mono<ResponseEntity<HotelResponse>> {
         return hotelService.getHotel(id)
             .map { hotelMapper.toDto(it) }
             .map { dto -> ResponseEntity.status(HttpStatus.OK).body(dto) }
-            .switchIfEmpty(Mono.error(NotFoundException("Hotel with id $id not found")));
+            .switchIfEmpty(Mono.error(NotFoundException("Hotel", id)));
     }
 
     @PostMapping
@@ -45,7 +46,7 @@ class HotelController(
             .map { dto -> ResponseEntity.status(HttpStatus.CREATED).body(dto) }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(EndpointConstant.ID_PATH)
     fun updateHotel(
         @PathVariable id: Long,
         @Validated(OnUpdate::class) @RequestBody updatedHotelRequest: HotelRequest
@@ -55,9 +56,9 @@ class HotelController(
             .map { dto -> ResponseEntity.status(HttpStatus.OK).body(dto) }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(EndpointConstant.ID_PATH)
     fun deleteHotel(@PathVariable id: Long): Mono<ResponseEntity<String>> {
         return hotelService.deleteHotel(id)
-            .then(Mono.just(ResponseEntity.status(HttpStatus.OK).body("Hotel deleted successfully")))
+            .then(ResponseUtil.successfulDeletionResponse("Hotel"))
     }
 }

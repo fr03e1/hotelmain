@@ -24,7 +24,7 @@ class HotelServiceImpl(private val hotelRepository: HotelRepository) : HotelServ
 
     override fun updateHotel(id: Long, updateHotel: Hotel): Mono<Hotel> {
         return hotelRepository.findById(id)
-            .switchIfEmpty(Mono.error(NotFoundException("Hotel with id $id not found")))
+            .switchIfEmpty(Mono.error(NotFoundException("Hotel", id)))
             .flatMap { existingHotel ->
                 existingHotel.name = updateHotel.name
                 existingHotel.address = updateHotel.address
@@ -38,7 +38,7 @@ class HotelServiceImpl(private val hotelRepository: HotelRepository) : HotelServ
 
     override fun deleteHotel(id: Long): Mono<Void> {
         return hotelRepository.findById(id)
-            .switchIfEmpty(Mono.error(NotFoundException("Hotel with id $id not found")))
+            .switchIfEmpty(Mono.error(NotFoundException("Hotel", id)))
             .flatMap { hotel ->
                 hotelRepository.delete(hotel)
             }
