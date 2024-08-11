@@ -26,7 +26,7 @@ class HotelController(
     @GetMapping
     fun getHotels(): ResponseEntity<Flux<HotelResponse>> {
         val hotels = hotelService.getHotels()
-            .map { hotelMapper.toDto(it) }
+            .map { hotelMapper.toHotelResponse(it) }
 
         return ResponseEntity.status(HttpStatus.OK).body(hotels)
     }
@@ -34,16 +34,16 @@ class HotelController(
     @GetMapping(EndpointConstant.ID_PATH)
     fun getHotel(@PathVariable id: Long): Mono<ResponseEntity<HotelResponse>> {
         return hotelService.getHotel(id)
-            .map { hotelMapper.toDto(it) }
-            .map { dto -> ResponseEntity.status(HttpStatus.OK).body(dto) }
-            .switchIfEmpty(Mono.error(NotFoundException("Hotel", id)));
+            .map { hotelMapper.toHotelResponse(it) }
+            .map { response -> ResponseEntity.status(HttpStatus.OK).body(response) }
+            .switchIfEmpty(Mono.error(NotFoundException("Hotel", id)))
     }
 
     @PostMapping
     fun saveHotel(@Validated(OnCreate::class) @RequestBody hotelRequest: HotelRequest): Mono<ResponseEntity<HotelResponse>> {
-        return hotelService.saveHotel(hotelMapper.toEntity(hotelRequest))
-            .map { hotelMapper.toDto(it) }
-            .map { dto -> ResponseEntity.status(HttpStatus.CREATED).body(dto) }
+        return hotelService.saveHotel(hotelMapper.toHotel(hotelRequest))
+            .map { hotelMapper.toHotelResponse(it) }
+            .map { response -> ResponseEntity.status(HttpStatus.CREATED).body(response) }
     }
 
     @PutMapping(EndpointConstant.ID_PATH)
@@ -51,13 +51,13 @@ class HotelController(
         @PathVariable id: Long,
         @Validated(OnUpdate::class) @RequestBody updatedHotelRequest: HotelRequest
     ): Mono<ResponseEntity<HotelResponse>> {
-        return hotelService.updateHotel(id, hotelMapper.toEntity(updatedHotelRequest))
-            .map { hotelMapper.toDto(it) }
-            .map { dto -> ResponseEntity.status(HttpStatus.OK).body(dto) }
+        return hotelService.updateHotel(id, hotelMapper.toHotel(updatedHotelRequest))
+            .map { hotelMapper.toHotelResponse(it) }
+            .map { response -> ResponseEntity.status(HttpStatus.OK).body(response) }
     }
 
     @DeleteMapping(EndpointConstant.ID_PATH)
-    fun deleteHotel(@PathVariable id: Long): Mono<ResponseEntity<String>> {
+    fun deleteHotel(@PathVariable id: Long): Mono<ResponseEntity<Map<String, String>>> {
         return hotelService.deleteHotel(id)
             .then(ResponseUtil.successfulDeletionResponse("Hotel"))
     }

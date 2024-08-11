@@ -9,16 +9,16 @@ import jakarta.validation.constraints.NotBlank
 data class HotelRequest(
     val id: Long? = null,
 
-    @field:NotBlank(message = "Name cannot be blank", groups = [OnCreate::class])
+    @field:NotBlank(message = "Name cannot be blank", groups = [OnCreate::class, OnUpdate::class])
     val name: String,
 
-    @field:NotBlank(message = "Address cannot be blank", groups = [OnCreate::class])
+    @field:NotBlank(message = "Address cannot be blank", groups = [OnCreate::class, OnUpdate::class])
     val address: String,
 
-    @field:NotBlank(message = "City cannot be blank", groups = [OnCreate::class])
+    @field:NotBlank(message = "City cannot be blank", groups = [OnCreate::class, OnUpdate::class])
     val city: String,
 
-    @field:NotBlank(message = "Country cannot be blank", groups = [OnCreate::class])
+    @field:NotBlank(message = "Country cannot be blank", groups = [OnCreate::class, OnUpdate::class])
     val country: String,
 
     val description: String? = null,

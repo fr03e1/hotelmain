@@ -4,9 +4,11 @@ import com.hotelmain.dto.ErrorResponse
 import com.hotelmain.exception.NotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.MissingRequestValueException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.bind.support.WebExchangeBindException
+import org.springframework.web.server.ServerWebInputException
 import reactor.core.publisher.Mono
 
 @RestControllerAdvice

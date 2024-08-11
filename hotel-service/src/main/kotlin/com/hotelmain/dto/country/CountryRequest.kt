@@ -1,14 +1,13 @@
-package com.hotelmain.dto.city
+package com.hotelmain.dto.country
 
 import com.hotelmain.dto.validation.OnCreate
 import com.hotelmain.dto.validation.OnUpdate
-import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 
-data class CityRequest(
+data class CountryRequest(
     @field:NotBlank(message = "Name cannot be blank", groups = [OnCreate::class, OnUpdate::class])
     val name: String,
 
-    @field:Min(value = 1, message = "Country id must be greater than 0", groups = [OnCreate::class, OnUpdate::class])
-    val countryId: Long
+    @field:NotBlank(message = "Code cannot be blank", groups = [OnCreate::class, OnUpdate::class])
+    val code: String
 )

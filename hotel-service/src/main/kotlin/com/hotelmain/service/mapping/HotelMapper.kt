@@ -8,9 +8,9 @@ import org.mapstruct.Mapping
 
 @Mapper(componentModel = "spring")
 interface HotelMapper {
-    fun toDto(entity: Hotel): HotelResponse
+    fun toHotelResponse(entity: Hotel): HotelResponse
 
     @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())")
-    fun toEntity(dto: HotelRequest): Hotel
+    fun toHotel(hotelRequest: HotelRequest): Hotel
 }

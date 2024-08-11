@@ -7,6 +7,7 @@ import com.hotelmain.service.HotelService
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import java.time.LocalDateTime
 
 @Service
 class HotelServiceImpl(private val hotelRepository: HotelRepository) : HotelService {
@@ -16,6 +17,7 @@ class HotelServiceImpl(private val hotelRepository: HotelRepository) : HotelServ
 
     override fun getHotel(id: Long): Mono<Hotel> {
         return hotelRepository.findById(id)
+            .switchIfEmpty(Mono.error(NotFoundException("Hotel", id)))
     }
 
     override fun saveHotel(hotel: Hotel): Mono<Hotel> {
@@ -23,23 +25,22 @@ class HotelServiceImpl(private val hotelRepository: HotelRepository) : HotelServ
     }
 
     override fun updateHotel(id: Long, updateHotel: Hotel): Mono<Hotel> {
-        return hotelRepository.findById(id)
-            .switchIfEmpty(Mono.error(NotFoundException("Hotel", id)))
-            .flatMap { existingHotel ->
-                existingHotel.name = updateHotel.name
-                existingHotel.address = updateHotel.address
-                existingHotel.city = updateHotel.city
-                existingHotel.country = updateHotel.country
-                existingHotel.description = updateHotel.description
-                existingHotel.rating = updateHotel.rating
+        return getHotel(id).flatMap { existingHotel ->
+                existingHotel.apply {
+                    name = updateHotel.name
+                    address = updateHotel.address
+                    city = updateHotel.city
+                    country = updateHotel.country
+                    description = updateHotel.description
+                    rating = updateHotel.rating
+                    updatedAt = LocalDateTime.now()
+                }
                 hotelRepository.save(existingHotel)
             }
     }
 
     override fun deleteHotel(id: Long): Mono<Void> {
-        return hotelRepository.findById(id)
-            .switchIfEmpty(Mono.error(NotFoundException("Hotel", id)))
-            .flatMap { hotel ->
+        return getHotel(id).flatMap { hotel ->
                 hotelRepository.delete(hotel)
             }
     }

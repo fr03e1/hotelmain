@@ -5,9 +5,10 @@ import org.springframework.http.ResponseEntity
 import reactor.core.publisher.Mono
 
 object ResponseUtil {
-    fun successfulDeletionResponse(entityName: String = "Entity"): Mono<ResponseEntity<String>> {
+    const val success = "success"
+    fun successfulDeletionResponse(entityName: String = "Entity"): Mono<ResponseEntity<Map<String, String>>> {
         return Mono.just(
-            ResponseEntity.status(HttpStatus.OK).body("$entityName deleted successfully")
+            ResponseEntity.status(HttpStatus.OK).body(mapOf(success to "$entityName deleted successfully"))
         )
     }
 }
