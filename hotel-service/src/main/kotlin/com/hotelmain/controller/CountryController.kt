@@ -1,6 +1,7 @@
 package com.hotelmain.controller
 
 import com.hotelmain.controller.endpoints.EndpointConstant
+import com.hotelmain.dto.api.ApiResponse
 import com.hotelmain.dto.country.CountryRequest
 import com.hotelmain.dto.country.CountryResponse
 import com.hotelmain.dto.validation.OnCreate
@@ -37,7 +38,7 @@ class CountryController(
             .map { ResponseEntity.status(HttpStatus.OK).body(it) }
     }
 
-    @PostMapping()
+    @PostMapping
     fun saveCountry(
         @Validated(OnCreate::class) @RequestBody countryRequest: CountryRequest
     ): Mono<ResponseEntity<CountryResponse>> {
@@ -57,7 +58,7 @@ class CountryController(
     }
 
     @DeleteMapping(EndpointConstant.ID_PATH)
-    fun deleteCountry(@PathVariable id: Long): Mono<ResponseEntity<Map<String, String>>> {
+    fun deleteCountry(@PathVariable id: Long): Mono<ResponseEntity<ApiResponse>> {
         return countryService.deleteCountry(id)
             .then(ResponseUtil.successfulDeletionResponse("Country"))
     }

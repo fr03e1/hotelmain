@@ -1,6 +1,7 @@
 package com.hotelmain.controller
 
 import com.hotelmain.controller.endpoints.EndpointConstant
+import com.hotelmain.dto.api.ApiResponse
 import com.hotelmain.dto.hotel.HotelRequest
 import com.hotelmain.dto.hotel.HotelResponse
 import com.hotelmain.dto.validation.OnCreate
@@ -57,7 +58,7 @@ class HotelController(
     }
 
     @DeleteMapping(EndpointConstant.ID_PATH)
-    fun deleteHotel(@PathVariable id: Long): Mono<ResponseEntity<Map<String, String>>> {
+    fun deleteHotel(@PathVariable id: Long): Mono<ResponseEntity<ApiResponse>> {
         return hotelService.deleteHotel(id)
             .then(ResponseUtil.successfulDeletionResponse("Hotel"))
     }
